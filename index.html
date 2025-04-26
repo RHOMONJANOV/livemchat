@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zorroq Connect | Premium Video Chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --primary-dark: #5649C0;
+            --primary-light: #A29BFE;
+            --secondary: #FD79A8;
+            --dark: #2D3436;
+            --darker: #1E272E;
+            --light: #F8F9FA;
+            --lighter: #FFFFFF;
+            --gray: #DFE6E9;
+            --gray-dark: #B2BEC3;
+            --success: #00B894;
+            --danger: #D63031;
+            --warning: #FDCB6E;
+            --info: #0984E3;
+
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+            --shadow-primary: 0 4px 20px rgba(108, 92, 231, 0.3);
+
+            --border-radius: 12px;
+            --border-radius-sm: 8px;
+            --border-radius-lg: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--lighter);
+            color: var(--dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            color: var(--primary);
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, rgba(108, 92, 231, 0.1) 0%, rgba(108, 92, 231, 0.2) 100%);
+            border-radius: 50%;
+            backdrop-filter: blur(5px);
+        }
+
+        .logo-text {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-tagline {
+            font-size: 0.65rem;
+            font-weight: 500;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: -5px;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .online-count {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .online-count:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-primary);
+        }
+
+        .online-count i {
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.9);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-primary);
+        }
+
+        .user-avatar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Video Container */
+        .video-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        @media (min-width: 992px) {
+            .video-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .video-box {
+            position: relative;
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            background-color: var(--darker);
+            aspect-ratio: 16/9;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            transform-style: preserve-3d;
+        }
+
+        .video-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 100%);
+            z-index: 1;
+        }
+
+        .video-box:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .video-box video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background-color: var(--darker);
+        }
+
+        .video-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+            color: white;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .video-label .name {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+        }
+
+        .video-label .badge {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.35rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .video-controls {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            display: flex;
+            gap: 0.75rem;
+            z-index: 3;
+        }
+
+        .control-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .control-btn:hover {
+            background-color: rgba(0,0,0,0.7);
+            transform: scale(1.1);
+        }
+
+        .control-btn i {
+            font-size: 0.9rem;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 180px;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-primary);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(108, 92, 231, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.2);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #00a884;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 184, 148, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e84393;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(253, 121, 168, 0.3);
+        }
+
+        .btn:disabled {
+            background-color: var(--gray);
+            color: var(--gray-dark);
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+            border: none;
+        }
+
+        /* Status Area */
+        .status-area {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .status-card {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius);
+            background-color: white;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+
+        .status-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .status-icon {
+            font-size: 1.5rem;
+        }
+
+        .status-waiting {
+            color: var(--warning);
+            background-color: rgba(253, 203, 110, 0.1);
+        }
+
+        .status-connected {
+            color: var(--success);
+            background-color: rgba(0, 184, 148, 0.1);
+        }
+
+        .status-error {
+            color: var(--danger);
+            background-color: rgba(214, 48, 49, 0.1);
+        }
+
+        .status-info {
+            color: var(--info);
+            background-color: rgba(9, 132, 227, 0.1);
+        }
+
+        /* Loading Animation */
+        .loader {
+            display: none;
+            width: 3.5rem;
+            height: 3.5rem;
+            border: 4px solid var(--gray);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 1.5rem auto;
+            position: relative;
+        }
+
+        .loader::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border: 4px solid transparent;
+            border-top-color: var(--secondary);
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Connection Info */
+        .connection-info {
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            box-shadow: var(--shadow-md);
+            display: none;
+            transition: all 0.4s ease;
+        }
+
+        .connection-info:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .connection-info h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+            padding: 0.75rem;
+            background-color: rgba(108, 92, 231, 0.05);
+            border-radius: var(--border-radius-sm);
+            transition: all 0.3s ease;
+        }
+
+        .info-item:hover {
+            background-color: rgba(108, 92, 231, 0.1);
+            transform: translateX(5px);
+        }
+
+        .info-item i {
+            color: var(--primary);
+            font-size: 1.1rem;
+            width: 32px;
+            height: 32px;
+            background-color: rgba(108, 92, 231, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Settings Toggle */
+        .settings-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(108, 92, 231, 0.4);
+            z-index: 100;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
+        }
+
+        .settings-toggle:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 15px 40px rgba(108, 92, 231, 0.5);
+        }
+
+        .settings-toggle i {
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        /* Connection Status Bar */
+        .connection-bar {
+            height: 6px;
+            background-color: var(--gray);
+            border-radius: 3px;
+            margin: 1rem 0;
+            overflow: hidden;
+            display: none;
+            position: relative;
+        }
+
+        .connection-progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.6s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .connection-progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg,
+            transparent,
+            rgba(255,255,255,0.4),
+            transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Interests Filter */
+        .interests-filter {
+            display: none;
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+
+        .interests-filter:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .interests-filter h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .interests-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .interest-tag {
+            padding: 0.6rem 1rem;
+            background-color: var(--gray);
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            color: var(--dark);
+            border: 1px solid transparent;
+        }
+
+        .interest-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .interest-tag.selected {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary-dark);
+            box-shadow: 0 4px 10px rgba(108, 92, 231, 0.3);
+        }
+
+        /* Floating Notification */
+        .notification {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background-color: var(--darker);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .notification i {
+            font-size: 1.5rem;
+        }
+
+        .notification-success i {
+            color: var(--success);
+        }
+
+        .notification-error i {
+            color: var(--danger);
+        }
+
+        .notification-warning i {
+            color: var(--warning);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .btn {
+                padding: 0.9rem 1.5rem;
+                min-width: 160px;
+                font-size: 0.9rem;
+            }
+
+            .controls {
+                gap: 1rem;
+            }
+
+            .video-container {
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            .user-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 280px;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .status-card {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Video Effects */
+        .video-box.premium::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg,
+            rgba(108, 92, 231, 0.1) 0%,
+            rgba(253, 121, 168, 0.1) 100%);
+            z-index: 1;
+        }
+
+        /* Premium Badge */
+        .premium-badge {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            background: linear-gradient(135deg, var(--warning), #FF7675);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 3;
+            box-shadow: 0 4px 15px rgba(253, 203, 110, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .premium-badge i {
+            font-size: 0.6rem;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <header>
+        <a href="#" class="logo">
+            <div class="logo-icon"><i class="fas fa-video"></i></div>
+            <div>
+                <div class="logo-text">Zorroq Connect</div>
+                <div class="logo-tagline">Premium Video Chat</div>
+            </div>
+        </a>
+
+        <div class="user-actions">
+            <div class="online-count">
+                <i class="fas fa-circle"></i>
+                <span id="onlineCount">Loading...</span>
+            </div>
+
+            <div class="user-menu">
+                <div class="user-avatar">U</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="video-container">
+            <div class="video-box fade-in premium">
+                <div class="premium-badge">
+                    <i class="fas fa-crown"></i>
+                    <span>Premium</span>
+                </div>
+                <div class="video-controls">
+                    <button class="control-btn" title="Mute">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button class="control-btn" title="Turn off camera">
+                        <i class="fas fa-video"></i>
+                    </button>
+                </div>
+                <video id="localVideo" autoplay muted playsinline></video>
+                <div class="video-label">
+                    <div class="name">
+                        <i class="fas fa-user"></i>
+                        <span>You</span>
+                    </div>
+                    <div class="badge">Local</div>
+                </div>
+            </div>
+            <div class="video-box fade-in">
+                <div class="video-controls">
+                    <button class="control-btn" title="Report">
+                        <i class="fas fa-flag"></i>
+                    </button>
+                    <button class="control-btn" title="Fullscreen">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                </div>
+                <video id="remoteVideo" autoplay playsinline></video>
+                <div class="video-label">
+                    <div class="name">
+                        <i class="fas fa-user-friends"></i>
+                        <span id="remoteUserName">Stranger</span>
+                    </div>
+                    <div class="badge">Remote</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-area">
+            <div class="status-card" id="statusCard">
+                <i class="fas fa-info-circle status-icon"></i>
+                <span id="statusText">Ready to connect</span>
+            </div>
+            <div class="loader" id="loader"></div>
+            <div class="connection-bar" id="connectionBar">
+                <div class="connection-progress" id="connectionProgress"></div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" id="startBtn">
+                <i class="fas fa-camera"></i> Start Camera
+            </button>
+            <button class="btn btn-success" id="connectBtn" disabled>
+                <i class="fas fa-random"></i> Find Stranger
+            </button>
+            <button class="btn btn-secondary" id="autoConnectBtn" disabled>
+                <i class="fas fa-bolt"></i> Auto Connect
+            </button>
+            <button class="btn btn-danger" id="disconnectBtn" disabled>
+                <i class="fas fa-phone-slash"></i> Disconnect
+            </button>
+        </div>
+
+        <div class="interests-filter" id="interestsFilter">
+            <h3><i class="fas fa-filter"></i> Filter by Interests</h3>
+            <div class="interests-grid" id="interestsGrid">
+                <!-- Interests will be added dynamically -->
+            </div>
+        </div>
+
+        <div class="connection-info" id="connectionInfo">
+            <h3><i class="fas fa-info-circle"></i> Connection Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <i class="fas fa-id-badge"></i>
+                    <span>Room ID: <strong id="roomId">None</strong></span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-clock"></i>
+                    <span>Duration: <strong id="callDuration">00:00</strong></span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-signal"></i>
+                    <span>Status: <strong id="connectionStatus">Disconnected</strong></span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-user"></i>
+                    <span>Partner: <strong id="partnerInfo">None</strong></span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-globe"></i>
+                    <span>Country: <strong id="partnerCountry">Unknown</strong></span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-heart"></i>
+                    <span>Interests: <strong id="partnerInterests">Unknown</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="settings-toggle" id="settingsToggle">
+    <i class="fas fa-cog"></i>
+</div>
+
+<div class="notification" id="notification">
+    <i class="fas fa-check-circle"></i>
+    <span id="notificationText">Notification message</span>
+</div>
+
+<script>
+    // DOM Elements
+    const localVideo = document.getElementById('localVideo');
+    const remoteVideo = document.getElementById('remoteVideo');
+    const startBtn = document.getElementById('startBtn');
+    const connectBtn = document.getElementById('connectBtn');
+    const autoConnectBtn = document.getElementById('autoConnectBtn');
+    const disconnectBtn = document.getElementById('disconnectBtn');
+    const statusCard = document.getElementById('statusCard');
+    const statusText = document.getElementById('statusText');
+    const statusIcon = statusCard.querySelector('.status-icon');
+    const loader = document.getElementById('loader');
+    const onlineCount = document.getElementById('onlineCount');
+    const remoteUserName = document.getElementById('remoteUserName');
+    const connectionInfo = document.getElementById('connectionInfo');
+    const roomIdElement = document.getElementById('roomId');
+    const callDurationElement = document.getElementById('callDuration');
+    const connectionStatusElement = document.getElementById('connectionStatus');
+    const partnerInfoElement = document.getElementById('partnerInfo');
+    const partnerCountryElement = document.getElementById('partnerCountry');
+    const partnerInterestsElement = document.getElementById('partnerInterests');
+    const settingsToggle = document.getElementById('settingsToggle');
+    const connectionBar = document.getElementById('connectionBar');
+    const connectionProgress = document.getElementById('connectionProgress');
+    const interestsFilter = document.getElementById('interestsFilter');
+    const interestsGrid = document.getElementById('interestsGrid');
+    const notification = document.getElementById('notification');
+    const notificationText = document.getElementById('notificationText');
+
+    // App State
+    let localStream;
+    let peerConnection;
+    let callStartTime;
+    let callDurationInterval;
+    let autoConnectInterval;
+    let isAutoConnect = false;
+    let isFindingStranger = false;
+    let connectionAttempts = 0;
+
+    // Data
+    const countries = [
+        {name: 'Uzbekistan', code: 'UZ'},
+        {name: 'United States', code: 'US'},
+        {name: 'Turkey', code: 'TR'},
+        {name: 'Russia', code: 'RU'},
+        {name: 'United Kingdom', code: 'UK'},
+        {name: 'Germany', code: 'DE'},
+        {name: 'France', code: 'FR'},
+        {name: 'Japan', code: 'JP'},
+        {name: 'South Korea', code: 'KR'},
+        {name: 'Brazil', code: 'BR'}
+    ];
+
+    const names = ['Alex', 'Jamie', 'Taylor', 'Morgan', 'Jordan', 'Casey', 'Riley', 'Quinn', 'Avery', 'Peyton'];
+
+    const interests = [
+        'Music', 'Gaming', 'Sports', 'Movies', 'Technology',
+        'Art', 'Travel', 'Food', 'Fashion', 'Science',
+        'Books', 'Fitness', 'Photography', 'Politics', 'Business'
+    ];
+
+    const interestsIcons = {
+        'Music': 'fa-music',
+        'Gaming': 'fa-gamepad',
+        'Sports': 'fa-running',
+        'Movies': 'fa-film',
+        'Technology': 'fa-microchip',
+        'Art': 'fa-palette',
+        'Travel': 'fa-plane',
+        'Food': 'fa-utensils',
+        'Fashion': 'fa-tshirt',
+        'Science': 'fa-atom',
+        'Books': 'fa-book-open',
+        'Fitness': 'fa-dumbbell',
+        'Photography': 'fa-camera',
+        'Politics': 'fa-landmark',
+        'Business': 'fa-briefcase'
+    };
+
+    // Online users simulation
+    let onlineUsers = 1250;
+    let onlineUsersInterval;
+    let isOnlineUsersIncreasing = true;
+
+    // Initialize
+    initInterests();
+    updateOnlineCount();
+    startOnlineUsersSimulation();
+
+    // Event Listeners
+    startBtn.addEventListener('click', startCamera);
+    connectBtn.addEventListener('click', findStranger);
+    autoConnectBtn.addEventListener('click', toggleAutoConnect);
+    disconnectBtn.addEventListener('click', disconnect);
+    settingsToggle.addEventListener('click', showSettings);
+
+    // Functions
+    function showNotification(message, type = 'success') {
+        const icon = notification.querySelector('i');
+        notification.className = 'notification';
+        icon.className = 'fas ';
+
+        switch(type) {
+            case 'success':
+                icon.className += 'fa-check-circle notification-success';
+                break;
+            case 'error':
+                icon.className += 'fa-times-circle notification-error';
+                break;
+            case 'warning':
+                icon.className += 'fa-exclamation-circle notification-warning';
+                break;
+        }
+
+        notificationText.textContent = message;
+        notification.classList.add('show');
+
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 3000);
+    }
+
+    function startOnlineUsersSimulation() {
+        // Simulate realistic online user count fluctuations
+        onlineUsersInterval = setInterval(() => {
+            // Randomly change direction
+            if (Math.random() > 0.8) {
+                isOnlineUsersIncreasing = !isOnlineUsersIncreasing;
+            }
+
+            // Change amount based on direction
+            const changeAmount = Math.floor(Math.random() * 50) + 10;
+            if (isOnlineUsersIncreasing) {
+                onlineUsers += changeAmount;
+                // Cap at reasonable maximum
+                if (onlineUsers > 2500) {
+                    onlineUsers = 2500 - Math.floor(Math.random() * 200);
+                    isOnlineUsersIncreasing = false;
+                }
+            } else {
+                onlineUsers -= changeAmount;
+                // Minimum floor
+                if (onlineUsers < 800) {
+                    onlineUsers = 800 + Math.floor(Math.random() * 200);
+                    isOnlineUsersIncreasing = true;
+                }
+            }
+
+            updateOnlineCount();
+        }, 5000);
+    }
+
+    function updateOnlineCount() {
+        onlineCount.textContent = onlineUsers.toLocaleString();
+    }
+
+    function initInterests() {
+        interests.forEach(interest => {
+            const tag = document.createElement('div');
+            tag.className = 'interest-tag';
+            tag.innerHTML = `<i class="fas ${interestsIcons[interest]}"></i> ${interest}`;
+            tag.addEventListener('click', () => {
+                tag.classList.toggle('selected');
+                showNotification(`Interest ${interest} ${tag.classList.contains('selected') ? 'added' : 'removed'}`);
+            });
+            interestsGrid.appendChild(tag);
+        });
+    }
+
+    async function startCamera() {
+        try {
+            updateStatus('Starting camera...', 'status-waiting', 'fa-camera');
+            startBtn.disabled = true;
+            startBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Starting...';
+
+            // Get user media with ideal constraints
+            localStream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 },
+                    facingMode: 'user'
+                },
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    autoGainControl: true
+                }
+            });
+
+            localVideo.srcObject = localStream;
+            connectBtn.disabled = false;
+            autoConnectBtn.disabled = false;
+            startBtn.innerHTML = '<i class="fas fa-check"></i> Camera Ready';
+
+            setTimeout(() => {
+                startBtn.innerHTML = '<i class="fas fa-camera"></i> Camera Ready';
+            }, 1500);
+
+            updateStatus('Camera ready - click Find Stranger', 'status-waiting', 'fa-user-plus');
+            interestsFilter.style.display = 'block';
+            showNotification('Camera and microphone are ready!');
+
+        } catch (error) {
+            console.error('Error accessing media devices:', error);
+            startBtn.disabled = false;
+            startBtn.innerHTML = '<i class="fas fa-camera"></i> Start Camera';
+
+            let errorMessage = 'Error accessing camera/microphone';
+            if (error.name === 'NotAllowedError') {
+                errorMessage = 'Permission denied. Please allow camera/microphone access';
+            } else if (error.name === 'NotFoundError') {
+                errorMessage = 'No camera/microphone found';
+            }
+
+            updateStatus(errorMessage, 'status-error', 'fa-exclamation-circle');
+            showNotification(errorMessage, 'error');
+        }
+    }
+
+    function findStranger() {
+        if (isFindingStranger) return;
+
+        if (isAutoConnect) toggleAutoConnect(); // Turn off auto connect if active
+
+        isFindingStranger = true;
+        connectBtn.disabled = true;
+        autoConnectBtn.disabled = true;
+        connectBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Searching...';
+        loader.style.display = 'block';
+        connectionBar.style.display = 'block';
+        updateStatus('Finding a stranger...', 'status-waiting', 'fa-search');
+
+        // Reset connection progress
+        connectionProgress.style.width = '0%';
+
+        // Simulate connection progress
+        let progress = 0;
+        const progressInterval = setInterval(() => {
+            progress += Math.random() * 10;
+            if (progress > 95) progress = 95; // Don't reach 100% until connection
+            connectionProgress.style.width = `${progress}%`;
+        }, 300);
+
+        // Simulate finding a stranger with realistic timing
+        const searchTime = 2000 + Math.random() * 4000; // 2-6 seconds
+
+        setTimeout(() => {
+            clearInterval(progressInterval);
+            connectionProgress.style.width = '100%';
+
+            // Random chance of finding someone (higher chance after more attempts)
+            const findChance = 0.3 + (connectionAttempts * 0.1);
+
+            if (Math.random() < findChance) {
+                // Found someone
+                setTimeout(() => {
+                    connectSuccess();
+                    connectionAttempts = 0;
+                    isFindingStranger = false;
+                    connectBtn.innerHTML = '<i class="fas fa-random"></i> Find Stranger';
+                }, 500);
+            } else {
+                // Didn't find anyone
+                setTimeout(() => {
+                    connectFailure();
+                    connectionAttempts++;
+                    isFindingStranger = false;
+                    connectBtn.innerHTML = '<i class="fas fa-random"></i> Find Stranger';
+                }, 500);
+            }
+        }, searchTime);
+    }
+
+    function connectSuccess() {
+        loader.style.display = 'none';
+        connectionBar.style.display = 'none';
+
+        // Generate random user info
+        const randomCountry = countries[Math.floor(Math.random() * countries.length)];
+        const randomName = names[Math.floor(Math.random() * names.length)];
+        const randomAge = Math.floor(Math.random() * 30) + 18;
+        const randomInterests = getRandomInterests();
+
+        remoteUserName.textContent = `${randomName}, ${randomAge}`;
+        partnerInfoElement.textContent = `${randomName}, ${randomAge}`;
+        partnerCountryElement.textContent = `${randomCountry.name} (${randomCountry.code})`;
+        partnerInterestsElement.textContent = randomInterests.join(', ');
+
+        // Create dummy remote video with country flag overlay
+        createDummyRemoteVideo(randomName, randomCountry.code);
+
+        // Update UI
+        connectBtn.disabled = true;
+        autoConnectBtn.disabled = true;
+        disconnectBtn.disabled = false;
+        updateStatus(`Connected to ${randomName}`, 'status-connected', 'fa-check-circle');
+        showNotification(`Connected with ${randomName} from ${randomCountry.name}`, 'success');
+
+        // Start call timer
+        startCallTimer();
+
+        // Show connection info
+        connectionInfo.style.display = 'block';
+        roomIdElement.textContent = `ROOM-${Math.floor(Math.random() * 9000) + 1000}`;
+        connectionStatusElement.textContent = 'Connected';
+    }
+
+    function getRandomInterests() {
+        const count = Math.floor(Math.random() * 3) + 2; // 2-4 interests
+        const shuffled = [...interests].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, count);
+    }
+
+    function createDummyRemoteVideo(name, countryCode) {
+        // Create a canvas with the name as background
+        const canvas = document.createElement('canvas');
+        canvas.width = 640;
+        canvas.height = 480;
+        const ctx = canvas.getContext('2d');
+
+        // Fill background with gradient
+        const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        gradient.addColorStop(0, '#6C5CE7');
+        gradient.addColorStop(1, '#FD79A8');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Add text
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = 'bold 30px Poppins';
+        ctx.textAlign = 'center';
+        ctx.fillText(name, canvas.width/2, canvas.height/2);
+
+        // Add country flag emoji
+        ctx.font = '60px Arial';
+        ctx.fillText(getCountryFlagEmoji(countryCode), canvas.width/2, canvas.height/2 + 60);
+
+        // Create a dummy stream
+        const stream = canvas.captureStream(15); // 15 FPS
+
+        // Assign to remote video
+        remoteVideo.srcObject = stream;
+    }
+
+    function getCountryFlagEmoji(countryCode) {
+        // Convert country code to flag emoji
+        return String.fromCodePoint(...[...countryCode.toUpperCase()].map(c => 0x1F1A5 + c.charCodeAt(0)));
+    }
+
+    function connectFailure() {
+        loader.style.display = 'none';
+        connectionBar.style.display = 'none';
+
+        const retryTime = Math.floor(Math.random() * 5) + 3;
+        updateStatus(`Couldn't find a stranger. Try again in ${retryTime} seconds.`, 'status-error', 'fa-exclamation-circle');
+        showNotification('No available strangers found. Trying again...', 'warning');
+
+        connectBtn.disabled = false;
+        autoConnectBtn.disabled = false;
+
+        // Enable retry after delay
+        setTimeout(() => {
+            if (!connectBtn.disabled && !isFindingStranger) { // Only if user hasn't clicked already
+                updateStatus('Ready to try again', 'status-waiting', 'fa-user-plus');
+            }
+        }, retryTime * 1000);
+    }
+
+    function toggleAutoConnect() {
+        isAutoConnect = !isAutoConnect;
+
+        if (isAutoConnect) {
+            autoConnectBtn.classList.remove('btn-outline');
+            autoConnectBtn.classList.add('btn-success');
+            autoConnectBtn.innerHTML = '<i class="fas fa-stop"></i> Stop Auto';
+            connectBtn.disabled = true;
+
+            updateStatus('Auto connect enabled - searching...', 'status-waiting', 'fa-search');
+            loader.style.display = 'block';
+            connectionBar.style.display = 'block';
+
+            // Start auto connect attempts
+            autoConnectInterval = setInterval(() => {
+                if (!isFindingStranger) {
+                    findStranger();
+                }
+            }, 3000 + Math.random() * 3000);
+
+            // First attempt immediately
+            setTimeout(() => {
+                if (!isFindingStranger) {
+                    findStranger();
+                }
+            }, 500);
+        } else {
+            autoConnectBtn.classList.add('btn-outline');
+            autoConnectBtn.classList.remove('btn-success');
+            autoConnectBtn.innerHTML = '<i class="fas fa-bolt"></i> Auto Connect';
+            connectBtn.disabled = false;
+            loader.style.display = 'none';
+            connectionBar.style.display = 'none';
+
+            clearInterval(autoConnectInterval);
+            updateStatus('Auto connect disabled', 'status-waiting', 'fa-user-plus');
+            showNotification('Auto connect turned off', 'info');
+        }
+    }
+
+    function disconnect() {
+        // Stop auto connect if active
+        if (isAutoConnect) {
+            toggleAutoConnect();
+        }
+
+        // Stop remote stream
+        if (remoteVideo.srcObject) {
+            remoteVideo.srcObject.getTracks().forEach(track => track.stop());
+            remoteVideo.srcObject = null;
+        }
+
+        // Reset UI
+        disconnectBtn.disabled = true;
+        connectBtn.disabled = false;
+        autoConnectBtn.disabled = false;
+        remoteUserName.textContent = 'Stranger';
+        partnerInfoElement.textContent = 'None';
+        partnerCountryElement.textContent = 'Unknown';
+        partnerInterestsElement.textContent = 'Unknown';
+
+        // Stop call timer
+        stopCallTimer();
+
+        // Update status
+        updateStatus('Disconnected. Ready to connect again', 'status-waiting', 'fa-user-plus');
+        showNotification('Disconnected from call', 'info');
+
+        // Hide connection info
+        connectionInfo.style.display = 'none';
+        connectionStatusElement.textContent = 'Disconnected';
+    }
+
+    function startCallTimer() {
+        callStartTime = new Date();
+        callDurationInterval = setInterval(updateCallDuration, 1000);
+    }
+
+    function stopCallTimer() {
+        clearInterval(callDurationInterval);
+        callDurationElement.textContent = '00:00';
+    }
+
+    function updateCallDuration() {
+        const now = new Date();
+        const diff = Math.floor((now - callStartTime) / 1000);
+        const minutes = Math.floor(diff / 60);
+        const seconds = diff % 60;
+        callDurationElement.textContent =
+            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    function updateStatus(text, statusClass, iconClass) {
+        statusText.textContent = text;
+        statusCard.className = `status-card ${statusClass}`;
+        statusIcon.className = `fas ${iconClass} status-icon`;
+    }
+
+    function showSettings() {
+        // Create a more sophisticated settings panel
+        const settingsHTML = `
+            <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000;">
+                <div style="background: white; border-radius: 16px; padding: 2rem; width: 90%; max-width: 500px; box-shadow: 0 10px 50px rgba(0,0,0,0.2);">
+                    <h2 style="color: var(--primary); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-cog"></i> Settings
+                    </h2>
+                    <div style="margin-bottom: 1.5rem;">
+                        <h3 style="margin-bottom: 0.5rem; color: var(--dark);"><i class="fas fa-video"></i> Video Settings</h3>
+                        <select style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--gray);">
+                            <option>HD (720p)</option>
+                            <option>Full HD (1080p)</option>
+                            <option>SD (480p)</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <h3 style="margin-bottom: 0.5rem; color: var(--dark);"><i class="fas fa-microphone"></i> Audio Settings</h3>
+                        <select style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--gray);">
+                            <option>Default Microphone</option>
+                            <option>High Quality Mode</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="margin-bottom: 0.5rem; color: var(--dark);"><i class="fas fa-sliders-h"></i> Preferences</h3>
+                        <label style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <input type="checkbox"> Auto-connect to matching interests
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox"> Enable sound notifications
+                        </label>
+                    </div>
+                    <button onclick="this.parentNode.parentNode.remove()" style="background: var(--primary); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; width: 100%; font-weight: 600; cursor: pointer;">
+                        Save Settings
+                    </button>
+                </div>
+            </div>
+        `;
+
+        const settingsDiv = document.createElement('div');
+        settingsDiv.innerHTML = settingsHTML;
+        document.body.appendChild(settingsDiv);
+    }
+
+    // Handle page visibility changes
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            // Page is hidden - might want to pause video or show notification
+            if (remoteVideo.srcObject) {
+                showNotification('You are still connected in the background', 'info');
+            }
+        }
+    });
+
+    // Handle beforeunload to clean up
+    window.addEventListener('beforeunload', () => {
+        if (remoteVideo.srcObject) {
+            disconnect();
+        }
+        clearInterval(onlineUsersInterval);
+    });
+</script>
+</body>
+</html>
